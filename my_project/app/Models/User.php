@@ -23,25 +23,26 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function lastPayment(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        //return $this->hasOne(Payment::class)->latest('created_at');
+        return $this->hasOne(Payment::class)->orderBy('created_at', 'desc');
 
+    }
+
+    public function paymentsLast7Days(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->payments()->where('created_at', '>=', now()->subDays(7));
+    }
+
+    public function paymentsLast7DaysSum()
+    {
+        return $this->paymentsLast7Days()->sum('amount');
+    }
 
 }

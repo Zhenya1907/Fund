@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\CommandController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentImportController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +18,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/users', [UserController::class, 'index'])->name('users');
+
+Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/profile/{user}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::post('/profile/{user}/send-notification', [NotificationController::class, 'sendEmailNotification'])
+    ->name('profile.send-notification');
+
+
+
+Route::get('/importPayments', [PaymentImportController::class, 'showForm'])->name('importPayments.form');
+Route::post('/importPayments', [PaymentImportController::class, 'import'])->name('importPayments');
+
+Route::get('/sendEmailToAdmin', function () {
+    \App\Events\NewPaymentEvent::dispatch();
+    return view('emails.new-payment');
 });

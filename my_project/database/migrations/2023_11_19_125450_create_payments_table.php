@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount');
-            $table->string('provider');
+            $table->decimal('amount')->nullable();
+            $table->string('provider')->nullable();
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');
