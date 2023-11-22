@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Payment;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\SendEmailNotificationToAdmin;
-use App\Listeners\SendlNotificationToSlack;
-use App\Events\NewPaymentEvent;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -23,9 +22,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        NewPaymentEvent::class => [
+        'eloquent.created: ' . Payment::class => [
             SendEmailNotificationToAdmin::class,
-//            SendlNotificationToSlack::class
         ],
     ];
 

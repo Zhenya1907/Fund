@@ -4,12 +4,11 @@ namespace App\Jobs;
 
 use App\Models\Payment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -24,22 +23,22 @@ class ImportPaymentsJob implements ShouldQueue
         $this->csvFilePath = $csvFilePath;
     }
 
-
     public function handle(): void
     {
-        $csvData = array_map('str_getcsv', file($this->csvFilePath));
+        $csvData = array_map('str_getcsv', file(storage_path('app/public/' . $this->csvFilePath)));
 
-        foreach ($csvData as $row) {
-            $userId = $row[0];
-            $amount = $row[1];
-
-            if (!empty($userId) && is_numeric($userId)) {
+        DB::transaction(function () use ($csvData) {
+            array_shift($csvData);
+            foreach ($csvData as $row) {
+                $userId = $row[0] ? $row[0] : null;
+                $amount = $row[1];
                 Payment::create([
-                    'user_id' => (int) $userId,
+                    'user_id' => $userId,
                     'amount' => $amount,
                 ]);
             }
-        }
+        });
+
         Storage::delete($this->csvFilePath);
     }
 }

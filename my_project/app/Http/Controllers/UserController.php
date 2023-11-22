@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class UserController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index(): View
     {
         $users = User::with(['lastPayment', 'paymentsLast7Days'])
             ->select('id', 'name', 'email', 'phone', 'created_at')
@@ -19,6 +19,5 @@ class UserController extends Controller
         });
 
         return view('users', compact('users'));
-
     }
 }

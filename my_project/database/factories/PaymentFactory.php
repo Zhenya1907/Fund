@@ -24,7 +24,7 @@ class PaymentFactory extends Factory
         return [
             'amount' => fake()->randomFloat(2, 10, 1000),
             'provider' => fake()->word,
-            'user_id' => fake()->numberBetween(1, 5),
+            'user_id' => User::query()->inRandomOrder()->first()->id,
         ];
     }
 }

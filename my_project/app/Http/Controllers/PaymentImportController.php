@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ImportPaymentsJob;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class PaymentImportController extends Controller
 {
-    public function showForm(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function showForm(): View
     {
         return view('importPayments.form');
     }
@@ -19,8 +20,7 @@ class PaymentImportController extends Controller
         ]);
 
         $csvFile = $request->file('csvFile');
-        $csvFilePath = 'storage/app/public/' . $csvFile->storeAs('csv', 'import_' . time() . '.csv', 'public');
-        ImportPaymentsJob::dispatch($csvFilePath);
+        ImportPaymentsJob::dispatch($csvFile->storePubliclyAs('csv', 'import_' . time() . '.csv', 'public'));
 
         return redirect()->route('importPayments.form')->with('success', 'CSV file is being processed.');
     }

@@ -126,6 +126,19 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'paymentLog' => [
+            'driver' => 'stack',
+            'channels' => ['single', 'paymentSingle', 'slack'],
+            'ignore_exceptions' => true,
+        ],
+
+        'paymentSingle' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/payment.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];

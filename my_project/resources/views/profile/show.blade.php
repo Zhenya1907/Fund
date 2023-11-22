@@ -25,14 +25,7 @@
         <p>No payments in the last 7 days</p>
     @endif
 
-<form method="post" action="{{ route('profile.send-notification', $user) }}">
-    @csrf
-
-    <label for="notification_text">Notification Text:</label>
-    <textarea id="notification_text" name="notification_text" required></textarea>
-
-    <button type="submit">Send Notification</button>
-</form>
+<a href="{{route('profile.send-notification', $user)}}">Send notification</a>
 
 
 

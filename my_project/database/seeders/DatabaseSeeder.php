@@ -16,6 +16,5 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(5)->create();
         Payment::factory(10)->create();
-
     }
 }

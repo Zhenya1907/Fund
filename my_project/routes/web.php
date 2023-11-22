@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CommandController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentImportController;
 use App\Http\Controllers\ProfileController;
@@ -24,6 +23,8 @@ Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile
 Route::get('/profile/{user}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
+
+Route::get('/profile/{user}/send-notification', [NotificationController::class, 'index']);
 Route::post('/profile/{user}/send-notification', [NotificationController::class, 'sendEmailNotification'])
     ->name('profile.send-notification');
 
@@ -32,7 +33,4 @@ Route::post('/profile/{user}/send-notification', [NotificationController::class,
 Route::get('/importPayments', [PaymentImportController::class, 'showForm'])->name('importPayments.form');
 Route::post('/importPayments', [PaymentImportController::class, 'import'])->name('importPayments');
 
-Route::get('/sendEmailToAdmin', function () {
-    \App\Events\NewPaymentEvent::dispatch();
-    return view('emails.new-payment');
-});
+
